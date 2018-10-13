@@ -24,7 +24,8 @@ def display_welcome():
 
     Print string welcoming the customer and prompting the cashier to begin scanning barcodes.
 
-    >>> Welcome to MinMax! The cashier will scan the items you wish to purchase.
+    >>> display_welcome()
+    Welcome to MinMax! The cashier will scan the items you wish to purchase.
     """
 
     print("Welcome to MinMax! The cashier will scan the items you wish to purchase.")
@@ -38,16 +39,16 @@ def get_barcode():
     received, then prints a completion message. Prints an error message if scan code is not recognised.
 
     >>> get_barcode()
-    >>> Please scan an item: 111111
-    >>> Total amount due: $1.15
-    >>> Please scan an item: 666666
-    >>> Total amount due: $6.80
-    >>> Please scan an item: 242424
-    >>> Total amount due: $28.25
-    >>> Please scan an item: 123456
-    >>> Please enter a valid scan code.
-    >>> Please scan an item: 0
-    >>> Scanning complete.
+    Please scan an item: 111111
+    Total amount due: $1.15
+    Please scan an item: 666666
+    Total amount due: $6.80
+    Please scan an item: 242424
+    Total amount due: $28.25
+    Please scan an item: 123456
+    Please enter a valid scan code.
+    Please scan an item: 0
+    Scanning complete.
     """
 
     scanning = True
@@ -85,7 +86,7 @@ def calculate_subtotal(UPC):
     each UPC code in the list UPC, then adding all three.
 
     >>> calculate_subtotal((1 * 1.0) + (1 * 5.0) + (1 * 19.0))
-    >>> 25.0
+    25.0
     """
 
     subtotal_before_tax = ((UPC.count(UPC_SINGLE) * PRICE_SINGLE) + (UPC.count(UPC_SMALL) * PRICE_SMALL)
@@ -101,10 +102,10 @@ def calculate_total_bill(subtotal_before_tax):
     rounded to the nearest 5 cents.
 
     >>> calculate_total_bill(25.0)
-    >>> [25.0, 3.25, 28.25, 28.25]
+    [25.0, 3.25, 28.25, 28.25]
 
-    >>> calculate_total_bill(2.26)
-    >>> 2.25
+    >>> calculate_total_bill(2.0)
+    [2.0, 0.26, 2.26, 2.25]
     """
 
     tax_amount = HST_RATE * subtotal_before_tax
@@ -123,16 +124,16 @@ def display_total_bill(totals):
     from four items in list totals.
 
     >>> display_total_bill([25.0, 3.25, 28.25, 28.25])
-    >>> Subtotal before taxes: $25.00
-    >>> Tax amount: $3.25
-    >>> Total: $28.25
-    >>> Total amount due: $28.25
+    Subtotal before taxes: $25.00
+    Tax amount: $3.25
+    Total: $28.25
+    Total amount due: $28.25
 
     >>> display_total_bill([2.0, 0.26, 2.26, 2.25])
-    >>> Subtotal before taxes: $2.00
-    >>> Tax amount: $0.26
-    >>> Total: $2.26
-    >>> Total amount due: $2.25
+    Subtotal before taxes: $2.00
+    Tax amount: $0.26
+    Total: $2.26
+    Total amount due: $2.25
     """
 
     print("Subtotal before taxes: $" + str("{:.2f}".format(totals[0])))
@@ -149,16 +150,16 @@ def get_amount_tendered(total_bill):
     message will be displayed.
 
     >>> get_amount_tendered(2.25)
-    >>> To cancel the transaction, enter 0.
-    >>> Please enter the amount tendered: 2
-    >>> The amount tendered is $0.25 short of the total. Please pay the full amount.
-    >>> Please enter the amount tendered: 0
-    >>> Transaction cancelled.
+    To cancel the transaction, enter 0.
+    Please enter the amount tendered: 2
+    The amount tendered is $0.25 short of the total. Please pay the full amount.
+    Please enter the amount tendered: 0
+    Transaction cancelled.
 
     >>> get_amount_tendered(2.25)
-    >>> To cancel the transaction, enter 0.
-    >>> Please enter the amount tendered: 3
-    >>> 3
+    To cancel the transaction, enter 0.
+    Please enter the amount tendered: 3
+    3
     """
 
     print("To cancel the transaction, enter 0.")
@@ -184,12 +185,12 @@ def display_change(amount_tendered, total_bill):
     is greater than 0. Prints a goodbye message.
 
     >>> display_change(3, [2.0, 0.26, 2.26, 2.25])
-    >>> Your change is: $0.75
-    >>> Thank you for shopping at MinMax. Please come again!
+    Your change is: $0.75
+    Thank you for shopping at MinMax. Please come again!
 
     >>> display_change(2.25, [2.0, 0.26, 2.26, 2.25])
-    >>> Your change is: $0.00
-    >>> Thank you for shopping at MinMax. Please come again!
+    Your change is: $0.00
+    Thank you for shopping at MinMax. Please come again!
     """
 
     amount_of_change = amount_tendered - total_bill
