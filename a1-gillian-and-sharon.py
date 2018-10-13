@@ -5,14 +5,10 @@
 # Lam, Sharon
 #
 # POS program for MinMax
-# v 1.0 - 2018-10-09
+# v 1.1 - 2018-10-13
 # compatible with Python version 3.6.5
-# source file: a1-gillian-and-sharon.py)
+# source file: a1-gillian-and-sharon.py
 #
-
-""" Test cases:
-
-"""
 
 PRICE_SINGLE = 1.00
 PRICE_SMALL = 5.00
@@ -24,72 +20,142 @@ HST_RATE = 0.13
 
 # display a welcome message
 def display_welcome():
+    """(NoneType) -> str
+
+    Print string welcoming the customer and prompting the cashier to begin scanning barcodes.
+
+    >>> Welcome to MinMax! The cashier will scan the items you wish to purchase.
+    """
+
     print("Welcome to MinMax! The cashier will scan the items you wish to purchase.")
 
-# prompt cashier to scan for each item, show the running total, and show the total bill
+# prompt cashier to scan barcodes
 def get_barcode():
-    scanning = True
-    running_total = 0
-    number_of_singles = 0
-    number_of_smalls = 0
-    number_of_larges = 0
+    """(NoneType) -> list
 
-    while (scanning):
+    Returns a list of barcodes entered from input. Calculates and prints the running total of
+    the scanned items with tax and nickel rounding until input of 0 is received, then prints
+    a completion message. Prints an error message if scan code is not recognised.
+
+    >>> get_barcode()
+    >>> Please scan an item: 111111
+    >>> Total amount due: $1.15
+    >>> Please scan an item: 666666
+    >>> Total amount due: $6.80
+    >>> Please scan an item: 242424
+    >>> Total amount due: $28.25
+    >>> Please scan an item: 123456
+    >>> Please enter a valid scan code.
+    >>> Please scan an item: 0
+    >>> Scanning complete.
+    """
+
+    scanning = True
+    subtotal_before_tax = 0
+    UPC = []
+
+    while scanning == True:
         cashier_input = input("Please scan an item: ")
         cashier_input = int(cashier_input)
 
         if cashier_input == 0:
             print("Scanning complete.")
             scanning = False
+            break
         elif cashier_input == UPC_SINGLE:
-            cost = PRICE_SINGLE + (PRICE_SINGLE * HST_RATE)
-            cost_rounded = round((round(cost / 0.05) * 0.05), 2)
-            running_total = running_total + cost_rounded
-            number_of_singles = number_of_singles + 1
-            print(running_total)
+            price = PRICE_SINGLE
+            UPC.append(UPC_SINGLE)
         elif cashier_input == UPC_SMALL:
-            cost = PRICE_SMALL + (PRICE_SMALL * HST_RATE)
-            cost_rounded = round((round(cost / 0.05) * 0.05), 2)
-            running_total = running_total + cost_rounded
-            number_of_smalls = number_of_smalls + 1
-            print(running_total)
+            price = PRICE_SMALL
+            UPC.append(UPC_SMALL)
         elif cashier_input == UPC_LARGE:
-            cost = PRICE_LARGE + (PRICE_LARGE * HST_RATE)
-            cost_rounded = round((round(cost / 0.05) * 0.05), 2)
-            running_total = running_total + cost_rounded
-            number_of_larges = number_of_larges + 1
-            print(running_total)
+            price = PRICE_LARGE
+            UPC.append(UPC_LARGE)
         else:
             print("Please enter a valid scan code.")
             continue
 
-    subtotal_before_tax = calculate_subtotal(number_of_singles, number_of_smalls, number_of_larges)
+        subtotal_before_tax += price
+        running_total = subtotal_before_tax + (subtotal_before_tax * HST_RATE)
+        running_total_rounded = round((round(running_total / 0.05) * 0.05), 2)
+        print("Total amount due: $" + "{:.2f}".format(running_total_rounded))
+
+    return UPC
+
+# calculate and return the subtotal before tax
+def calculate_subtotal(UPC):
+    """ (list) -> float
+
+    Returns the subtotal_before_tax by multiplying the corresponding price with the count of
+    each UPC code in the list UPC, then adding all three.
+
+    >>> calculate_subtotal(5 * 5.00)
+    >>> 25.0
+    """
+
+    subtotal_before_tax = ((UPC.count(UPC_SINGLE) * PRICE_SINGLE) + (UPC.count(UPC_SMALL) * PRICE_SMALL)
+     + (UPC.count(UPC_LARGE) * PRICE_LARGE))
+    return subtotal_before_tax
+
+# calculate and return the total bill, then call display_total_bill
+def calculate_total_bill(subtotal_before_tax):
+    """ (float) -> float
+
+    Returns the total_bill by using the subtotal_before_tax to calculate the tax_amount,
+    total_before_rounding, and total_bill, rounding to the nearest 5 cents. Calls display_total_bill
+    to print all four amounts.
+
+    >>> calculate_total_bill(2.26)
+    >>> 2.25
+    """
+
     tax_amount = HST_RATE * subtotal_before_tax
     total_before_rounding = subtotal_before_tax + tax_amount
-    total_bill = calculate_total_bill(subtotal_before_tax, tax_amount, total_before_rounding)
+    total_bill = round((round(total_before_rounding / 0.05) * 0.05), 2)
+
     display_total_bill(subtotal_before_tax, tax_amount, total_before_rounding, total_bill)
 
     return total_bill
 
-# calculate the subtotal before tax
-def calculate_subtotal(number_of_singles, number_of_smalls, number_of_larges):
-    subtotal_before_tax = (number_of_singles * PRICE_SINGLE) + (number_of_smalls * PRICE_SMALL) + (number_of_larges * PRICE_LARGE)
-    return subtotal_before_tax
-
-# calculate the total bill
-def calculate_total_bill(subtotal_before_tax, tax_amount, total_before_rounding):
-    total_bill = round((round(total_before_rounding / 0.05) * 0.05), 2)
-    return total_bill
-
-# display the subtotal before tax, tax amount, total before rounding, and rounded total
+# print the subtotal before tax, tax amount, total before rounding, and rounded total
 def display_total_bill(subtotal_before_tax, tax_amount, total_before_rounding, total_bill):
-    print("Your subtotal before taxes is: " + str(subtotal_before_tax))
-    print("Tax amount: " + str(tax_amount))
-    print("Total: " + str(total_before_rounding))
-    print("Total amount due: " + str(total_bill))
+    """ (float, float, float, float) -> str
+
+    Prints strings with the subtotal_before_tax, tax_amount, total_before_rounding, and total_bill.
+
+    >>> display_total_bill(2.0, 0.26, 2.26, 2.25)
+    >>> Subtotal before taxes: $2.00
+    >>> Tax amount: $0.26
+    >>> Total: $2.26
+    >>> Total amount due: $2.25
+    """
+
+    print("Subtotal before taxes: $" + str("{:.2f}".format(subtotal_before_tax)))
+    print("Tax amount: $" + str("{:.2f}".format(tax_amount)))
+    print("Total: $" + str("{:.2f}".format(total_before_rounding)))
+    print("Total amount due: $" + str("{:.2f}".format(total_bill)))
 
 # prompt cashier to enter the amount tendered by the customer and allow transaction to be cancelled
 def get_amount_tendered(total_bill):
+    """ (float) -> num
+
+    Return the amount_tendered after checking it against total_bill. If input of 0 is received, a
+    cancellation message is printed. If the amount_tendered is less than the total_bill, an error
+    message will be displayed.
+
+    >>> get_amount_tendered(2.25)
+    >>> To cancel the transaction, enter 0.
+    >>> Please enter the amount tendered: 2
+    >>> The amount tendered is $0.25 short of the total. Please pay the full amount.
+    >>> Please enter the amount tendered: 0
+    >>> Transaction cancelled.
+
+    >>> get_amount_tendered(2.25)
+    >>> To cancel the transaction, enter 0.
+    >>> Please enter the amount tendered: 3
+    >>> 3
+    """
+
     print("To cancel the transaction, enter 0.")
     paying = True
     while paying == True:
@@ -100,16 +166,31 @@ def get_amount_tendered(total_bill):
             print("Transaction cancelled.")
             return 0
         elif amount_tendered < total_bill:
-                print("The amount tendered is " + str(round((total_bill - amount_tendered), 2)) + " short of the total. Please pay the full amount." )
+                print("The amount tendered is $" + str("{:.2f}".format(total_bill - amount_tendered))
+                + " short of the total. Please pay the full amount.")
 
     return amount_tendered
 
-# calculate and display the amount of change to be given to the customer with a goodbye message
+# calculate and print the amount of change to be given to the customer with a goodbye message
 def display_change(amount_tendered, total_bill):
+    """ (num, float) -> str
+
+    Prints the amount_of_change calculated from amount_tendered and total_bill iff amount_tendered
+    is greater than 0. Prints a goodbye message.
+
+    >>> display_change(3, 2.25)
+    >>> Your change is: $0.75
+    >>> Thank you for shopping at MinMax. Please come again!
+
+    >>> display_change(2.25, 2.25)
+    >>> Your change is: $0.00
+    >>> Thank you for shopping at MinMax. Please come again!
+    """
+
     amount_of_change = amount_tendered - total_bill
     amount_of_change = round((round(amount_of_change / 0.05) * 0.05), 2)
     if amount_tendered > 0:
-        print("Your change is: " + str(amount_of_change))
+        print("Your change is: $" + str("{:.2f}".format(amount_of_change)))
     print("Thank you for shopping at MinMax. Please come again!")
 
 
@@ -117,6 +198,8 @@ if __name__  ==  "__main__":
     """The cashier is prompted to start scanning items.
     """
     display_welcome()
-    total_bill = get_barcode()
+    UPC = get_barcode()
+    subtotal_before_tax = calculate_subtotal(UPC)
+    total_bill = calculate_total_bill(subtotal_before_tax)
     amount_tendered = get_amount_tendered(total_bill)
     display_change(amount_tendered, total_bill)
