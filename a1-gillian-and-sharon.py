@@ -21,9 +21,7 @@ HST_RATE = 0.13
 # display a welcome message
 def display_welcome():
     """(NoneType) -> str
-
     Print string welcoming the customer and prompting the cashier to begin scanning barcodes.
-
     >>> display_welcome()
     Welcome to MinMax! The cashier will scan the items you wish to purchase.
     """
@@ -33,11 +31,9 @@ def display_welcome():
 # prompt cashier to scan barcodes
 def get_barcode():
     """(NoneType) -> list
-
     Returns a list of barcodes entered from input. Calls calculate_subtotal and calculate_total_bill
-    to print the running total of the scanned items with tax and nickel rounding until input of 0 is
+    to print the running subtotal and tax of the scanned items with tax and nickel rounding until input of 0 is
     received, then prints a completion message. Prints an error message if scan code is not recognised.
-
     >>> get_barcode()
     Please scan an item: 111111
     Total amount due: $1.15
@@ -81,10 +77,8 @@ def get_barcode():
 # calculate and return the subtotal before tax
 def calculate_subtotal(UPC):
     """ (list) -> float
-
     Returns the subtotal_before_tax by multiplying the corresponding price with the count of
     each UPC code in the list UPC, then adding all three.
-
     >>> calculate_subtotal((1 * 1.0) + (1 * 5.0) + (1 * 19.0))
     25.0
     """
@@ -97,13 +91,10 @@ def calculate_subtotal(UPC):
 # calculate and return the total bill, then call display_total_bill
 def calculate_total_bill(subtotal_before_tax):
     """ (float) -> list
-
     Returns list totals containing subtotal_before_tax, tax_amount, total_before_rounding, and total_bill
     rounded to the nearest 5 cents.
-
     >>> calculate_total_bill(25.0)
     [25.0, 3.25, 28.25, 28.25]
-
     >>> calculate_total_bill(2.0)
     [2.0, 0.26, 2.26, 2.25]
     """
@@ -118,17 +109,14 @@ def calculate_total_bill(subtotal_before_tax):
 
 # print the subtotal before tax, tax amount, total before rounding, and rounded total
 def display_total_bill(totals):
-    """ (list) -> str
-
+    """ (list) -> NoneType
     Prints strings with the subtotal_before_tax, tax_amount, total_before_rounding, and total_bill
     from four items in list totals.
-
     >>> display_total_bill([25.0, 3.25, 28.25, 28.25])
     Subtotal before taxes: $25.00
     Tax amount: $3.25
     Total: $28.25
     Total amount due: $28.25
-
     >>> display_total_bill([2.0, 0.26, 2.26, 2.25])
     Subtotal before taxes: $2.00
     Tax amount: $0.26
@@ -143,19 +131,16 @@ def display_total_bill(totals):
 
 # prompt cashier to enter the amount tendered by the customer and allow transaction to be cancelled
 def get_amount_tendered(total_bill):
-    """ (list) -> num
-
+    """ (list) -> float 
     Return the amount_tendered after checking it against total_bill. If input of 0 is received, a
     cancellation message is printed. If the amount_tendered is less than total_bill, an error
     message will be displayed.
-
     >>> get_amount_tendered(2.25)
     To cancel the transaction, enter 0.
     Please enter the amount tendered: 2
     The amount tendered is $0.25 short of the total. Please pay the full amount.
     Please enter the amount tendered: 0
     Transaction cancelled.
-
     >>> get_amount_tendered(2.25)
     To cancel the transaction, enter 0.
     Please enter the amount tendered: 3
@@ -170,7 +155,7 @@ def get_amount_tendered(total_bill):
             paying = False
         elif amount_tendered == 0:
             print("Transaction cancelled.")
-            return 0
+            return 0.00 
         elif amount_tendered < total_bill:
                 print("The amount tendered is $" + str("{:.2f}".format(total_bill - amount_tendered))
                 + " short of the total. Please pay the full amount.")
@@ -179,15 +164,12 @@ def get_amount_tendered(total_bill):
 
 # calculate and print the amount of change to be given to the customer with a goodbye message
 def display_change(amount_tendered, total_bill):
-    """ (num, list) -> str
-
-    Prints the amount_of_change calculated from amount_tendered and total_bill iff amount_tendered
+    """ (float, list) -> NoneType
+    Prints the amount_of_change calculated from amount_tendered and total_bill if amount_tendered
     is greater than 0. Prints a goodbye message.
-
     >>> display_change(3, [2.0, 0.26, 2.26, 2.25])
     Your change is: $0.75
     Thank you for shopping at MinMax. Please come again!
-
     >>> display_change(2.25, [2.0, 0.26, 2.26, 2.25])
     Your change is: $0.00
     Thank you for shopping at MinMax. Please come again!
