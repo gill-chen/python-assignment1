@@ -6,7 +6,7 @@
 #
 # POS program for MinMax
 # v 1.2 - 2018-10-14
-# compatible with Python version 3.6.5
+# compatible with Python versions 3.2, 3.6, 3.7
 # source file: a1-gillian-and-sharon.py
 #
 
